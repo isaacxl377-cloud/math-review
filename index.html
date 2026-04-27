@@ -1,16 +1,209 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>沪科版7下数学复习</title>
-  <!-- 引入 Tailwind CSS -->
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-  <!-- 引入 React 和 Babel -->
-  <script src="[https://unpkg.com/react@18/umd/react.production.min.js](https://unpkg.com/react@18/umd/react.production.min.js)" crossorigin></script>
-  <script src="[https://unpkg.com/react-dom@18/umd/react-dom.production.min.js](https://unpkg.com/react-dom@18/umd/react-dom.production.min.js)" crossorigin></script>
-  <script src="[https://unpkg.com/@babel/standalone/babel.min.js](https://unpkg.com/@babel/standalone/babel.min.js)"></script>
-  <style>
+import React, { useState } from 'react';
+
+const units = [
+  {
+    id: 1,
+    title: "第六章：实数",
+    shortTitle: "实数",
+    icon: "🔢",
+    sections: [
+      {
+        subtitle: "算术平方根",
+        content: "一般地，如果一个正数 x 的平方等于 a，即 x² = a，那么正数 x 叫做 a 的算术平方根，记作 √a。\n规定：0的算术平方根是0。",
+        important: "正数和0有算术平方根，负数没有算术平方根。"
+      },
+      {
+        subtitle: "平方根",
+        content: "如果一个数 x 的平方等于 a，即 x² = a，那么这个数 x 叫做 a 的平方根（或二次方根），记作 ±√a。",
+        important: "正数有两个平方根，它们互为相反数；0的平方根是0；负数没有平方根。"
+      },
+      {
+        subtitle: "立方根",
+        content: "如果一个数 x 的立方等于 a，即 x³ = a，那么这个数 x 叫做 a 的立方根，记作 ³√a。",
+        important: "正数的立方根是正数；0的立方根是0；负数的立方根是负数。"
+      },
+      {
+        subtitle: "无理数与实数",
+        content: "无理数：无限不循环小数叫做无理数（如 π, √2）。\n实数：有理数和无理数统称为实数。",
+        important: "实数与数轴上的点是一一对应的。每一个实数都可以用数轴上的一个点来表示。"
+      }
+    ],
+    quizzes: [
+      "一般地，如果一个正数 x 的平方等于 a，即 x² = a，那么正数 x 叫做 a 的[[算术平方根]]。",
+      "正数的平方根有[[两]]个，它们互为[[相反数]]；0的平方根是[[0]]；负数[[没有]]平方根。",
+      "正数的立方根是[[正数]]；0的立方根是[[0]]；负数的立方根是[[负数]]。",
+      "无限[[不循环]]小数叫做无理数（如 π）。有理数和无理数统称为[[实数]]。",
+      "每一个实数都可以用数轴上的一个[[点]]来表示，它们是一一对应的。"
+    ]
+  },
+  {
+    id: 2,
+    title: "第七章：一元一次不等式",
+    shortTitle: "不等式",
+    icon: "⚖️",
+    sections: [
+      {
+        subtitle: "不等式的基本性质",
+        content: "性质1：不等式两边加（或减）同一个数（或式子），不等号的方向不变。\n性质2：不等式两边乘（或除以）同一个正数，不等号的方向不变。\n性质3：不等式两边乘（或除以）同一个负数，不等号的方向改变。",
+        formula: (
+          <>
+            若 a {'>'} b，c {'<'} 0，则 ac {'<'} bc，a/c {'<'} b/c
+          </>
+        ),
+        important: "乘以或除以负数时，务必改变不等号方向！"
+      },
+      {
+        subtitle: "一元一次不等式解法",
+        content: "解题基本步骤与解一元一次方程类似：\n1. 去分母\n2. 去括号\n3. 移项\n4. 合并同类项\n5. 系数化为1"
+      },
+      {
+        subtitle: "一元一次不等式组及解集",
+        content: "解两个一元一次不等式组成的不等式组时，解集的确定方法（设 a > b）：",
+        formula: (
+          <div className="space-y-2">
+            <p>1. 同大取大：x{'>'}a 且 x{'>'}b ➔ <b>x {'>'} a</b></p>
+            <p>2. 同小取小：x{'<'}a 且 x{'<'}b ➔ <b>x {'<'} b</b></p>
+            <p>3. 大小小大中间找：x{'<'}a 且 x{'>'}b ➔ <b>b {'<'} x {'<'} a</b></p>
+            <p>4. 大大小小解不了：x{'>'}a 且 x{'<'}b ➔ <b>无解</b></p>
+          </div>
+        )
+      }
+    ],
+    quizzes: [
+      "不等式两边加（或减）同一个数（或式子），不等号的方向[[不变]]。",
+      "不等式两边乘（或除以）同一个[[负数]]时，不等号的方向务必要[[改变]]！",
+      "解不等式组口诀（同大取大）：x>a 且 x>b ➔ x > [[a]]。",
+      "解不等式组口诀（同小取小）：x<a 且 x<b ➔ x < [[b]]。",
+      "解不等式组口诀（大小小大）：x<a 且 x>b ➔ [[b < x < a]]（即中间找）。",
+      "解不等式组口诀（大大小小）：x>a 且 x<b ➔ [[无解]]（解不了）。"
+    ]
+  },
+  {
+    id: 3,
+    title: "第八章：整式乘除与因式分解",
+    shortTitle: "整式因分",
+    icon: "✖️",
+    sections: [
+      {
+        subtitle: "幂的运算性质",
+        content: "底数相同时，乘法变指数相加，除法变指数相减。",
+        formula: (
+          <div className="space-y-2">
+            <p>1. 同底数幂相乘：a<sup>m</sup> · a<sup>n</sup> = a<sup>m+n</sup></p>
+            <p>2. 幂的乘方：(a<sup>m</sup>)<sup>n</sup> = a<sup>mn</sup></p>
+            <p>3. 积的乘方：(ab)<sup>n</sup> = a<sup>n</sup>b<sup>n</sup></p>
+            <p>4. 同底数幂相除：a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m-n</sup> (a≠0)</p>
+          </div>
+        )
+      },
+      {
+        subtitle: "零指数幂与负整数指数幂",
+        formula: (
+          <div className="space-y-2">
+            <p>a<sup>0</sup> = 1 (a≠0)</p>
+            <p>a<sup>-p</sup> = 1 / a<sup>p</sup> (a≠0, p为正整数)</p>
+          </div>
+        ),
+        important: "底数 a 绝对不能为 0。"
+      },
+      {
+        subtitle: "乘法公式（核心考点）",
+        content: "用于快速展开多项式乘积。",
+        formula: (
+          <div className="space-y-2">
+            <p>平方差公式：(a+b)(a-b) = a<sup>2</sup> - b<sup>2</sup></p>
+            <p>完全平方公式：(a±b)<sup>2</sup> = a<sup>2</sup> ± 2ab + b<sup>2</sup></p>
+          </div>
+        ),
+        important: "完全平方公式中间的 ±2ab 项极易漏掉！"
+      },
+      {
+        subtitle: "因式分解",
+        content: "把一个多项式化成几个整式的积的形式，与整式乘法是互逆过程。\n\n常用方法：\n1. 提公因式法：提取各项都有的公因式。\n2. 公式法：逆用平方差和完全平方公式。\n3. 十字相乘法：常用于二次三项式 x²+(p+q)x+pq = (x+p)(x+q)。",
+        important: "因式分解必须进行到每一个因式都不能再分解为止。"
+      }
+    ],
+    quizzes: [
+      "同底数幂相乘：底数不变，指数[[相加]]。即 aᵐ · aⁿ = [[aᵐ⁺ⁿ]]。",
+      "幂的乘方：底数不变，指数[[相乘]]。即 (aᵐ)ⁿ = [[aᵐⁿ]]。",
+      "任何不等于0的数的0次幂都等于[[1]]。即 a⁰ = 1 (a≠0)。",
+      "平方差公式：(a+b)(a-b) = [[a² - b²]]。",
+      "完全平方公式：(a±b)² = [[a² ± 2ab + b²]]，极易漏掉中间的[[±2ab]]项。",
+      "因式分解必须进行到每一个因式都[[不能再分解]]为止。"
+    ]
+  },
+  {
+    id: 4,
+    title: "第九章：分式",
+    shortTitle: "分式",
+    icon: "➗",
+    sections: [
+      {
+        subtitle: "分式的概念与意义",
+        content: "形如 A/B 的式子，其中A、B都是整式，且B中含有字母，叫做分式。",
+        important: "分式有意义的条件：分母 B ≠ 0\n分式值为0的条件：分子 A = 0 且 分母 B ≠ 0（必须同时满足！）"
+      },
+      {
+        subtitle: "分式的基本性质",
+        content: "分式的分子和分母同乘（或除以）一个不等于0的整式，分式的值不变。这是约分和通分的基础。",
+        formula: (
+          <>
+            A/B = (A·C)/(B·C) = (A÷C)/(B÷C) (其中 C≠0)
+          </>
+        )
+      },
+      {
+        subtitle: "分式的运算",
+        content: "乘法：分子乘分子作积的分子，分母乘分母作积的分母。\n除法：除以一个分式，等于乘以这个分式的倒数。\n加减：同分母直接把分子相加减；异分母先找最简公分母通分，再加减。"
+      },
+      {
+        subtitle: "分式方程",
+        content: "分母中含有未知数的方程叫做分式方程。\n解题思路是“化归思想”：方程两边同乘最简公分母，把分式方程转化为整式方程求解。",
+        important: "解分式方程必须检验！如果求得的解使最简公分母为0，则该解是原方程的增根，必须舍去。"
+      }
+    ],
+    quizzes: [
+      "分式 A/B 有意义的条件是：分母 B [[≠ 0]]。",
+      "分式值为0的条件是：分子 A [[= 0]] 且 分母 B [[≠ 0]]（必须同时满足）。",
+      "除以一个分式，等于乘以这个分式的[[倒数]]。",
+      "解分式方程最后一步必须要[[检验]]！",
+      "如果求得的解使最简公分母为0，则该解是原方程的[[增根]]，必须舍去。"
+    ]
+  }
+];
+
+const ClozeQuestion = ({ text }) => {
+  const parts = text.split(/\[\[(.*?)\]\]/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (i % 2 === 1) {
+          return <Blank key={i} answer={part} />;
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+};
+
+const Blank = ({ answer }) => {
+  const [revealed, setRevealed] = useState(false);
+  return (
+    <span
+      onClick={() => setRevealed(!revealed)}
+      className={`inline-flex items-center justify-center min-w-[4rem] mx-1.5 px-2.5 py-1 rounded align-middle cursor-pointer transition-all duration-300 select-none ${
+        revealed
+          ? 'bg-indigo-100 text-indigo-800 font-bold border-b-2 border-indigo-500 shadow-sm text-[15px]'
+          : 'bg-slate-100 text-slate-400 text-[12px] border-b-2 border-slate-300 hover:bg-slate-200 active:scale-95'
+      }`}
+    >
+      {revealed ? answer : '点击显示'}
+    </span>
+  );
+};
+
+const GlobalStyle = () => (
+  <style>{`
     @keyframes fadeSlideUp {
       from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
@@ -19,202 +212,157 @@
       animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
     }
-    body { -webkit-tap-highlight-color: transparent; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
+    body {
+      -webkit-tap-highlight-color: transparent;
+    }
+  `}</style>
+);
 
-  <script type="text/babel">
-    const { useState } = React;
+export default function App() {
+  const [activeUnitId, setActiveUnitId] = useState(1);
+  const [mode, setMode] = useState('review'); // 'review' | 'practice'
+  const [resetKey, setResetKey] = useState(0);
+  
+  const activeUnit = units.find(u => u.id === activeUnitId);
 
-    const units = [
-      {
-        id: 1, title: "第六章：实数", shortTitle: "实数", icon: "🔢",
-        sections: [
-          { subtitle: "算术平方根", content: "一般地，如果一个正数 x 的平方等于 a，即 x² = a，那么正数 x 叫做 a 的算术平方根，记作 √a。\n规定：0的算术平方根是0。", important: "正数和0有算术平方根，负数没有算术平方根。" },
-          { subtitle: "平方根", content: "如果一个数 x 的平方等于 a，即 x² = a，那么这个数 x 叫做 a 的平方根（或二次方根），记作 ±√a。", important: "正数有两个平方根，它们互为相反数；0的平方根是0；负数没有平方根。" },
-          { subtitle: "立方根", content: "如果一个数 x 的立方等于 a，即 x³ = a，那么这个数 x 叫做 a 的立方根，记作 ³√a。", important: "正数的立方根是正数；0的立方根是0；负数的立方根是负数。" },
-          { subtitle: "无理数与实数", content: "无理数：无限不循环小数叫做无理数（如 π, √2）。\n实数：有理数和无理数统称为实数。", important: "实数与数轴上的点是一一对应的。每一个实数都可以用数轴上的一个点来表示。" }
-        ],
-        quizzes: [
-          "一般地，如果一个正数 x 的平方等于 a，即 x² = a，那么正数 x 叫做 a 的[[算术平方根]]。",
-          "正数的平方根有[[两]]个，它们互为[[相反数]]；0的平方根是[[0]]；负数[[没有]]平方根。",
-          "正数的立方根是[[正数]]；0的立方根是[[0]]；负数的立方根是[[负数]]。",
-          "无限[[不循环]]小数叫做无理数（如 π）。有理数和无理数统称为[[实数]]。",
-          "每一个实数都可以用数轴上的一个[[点]]来表示，它们是一一对应的。"
-        ]
-      },
-      {
-        id: 2, title: "第七章：一元一次不等式", shortTitle: "不等式", icon: "⚖️",
-        sections: [
-          { subtitle: "不等式的基本性质", content: "性质1：不等式两边加（或减）同一个数（或式子），不等号的方向不变。\n性质2：不等式两边乘（或除以）同一个正数，不等号的方向不变。\n性质3：不等式两边乘（或除以）同一个负数，不等号的方向改变。", formula: "若 a > b，c < 0，则 ac < bc，a/c < b/c", important: "乘以或除以负数时，务必改变不等号方向！" },
-          { subtitle: "一元一次不等式解法", content: "解题基本步骤与解一元一次方程类似：\n1. 去分母\n2. 去括号\n3. 移项\n4. 合并同类项\n5. 系数化为1" },
-          { subtitle: "一元一次不等式组及解集", content: "解两个一元一次不等式组成的不等式组时，解集的确定方法（设 a > b）：", formula: "1. 同大取大：x>a 且 x>b ➔ x > a\n2. 同小取小：x<a 且 x<b ➔ x < b\n3. 大小小大中间找：x<a 且 x>b ➔ b < x < a\n4. 大大小小解不了：x>a 且 x<b ➔ 无解" }
-        ],
-        quizzes: [
-          "不等式两边加（或减）同一个数（或式子），不等号的方向[[不变]]。",
-          "不等式两边乘（或除以）同一个[[负数]]时，不等号的方向务必要[[改变]]！",
-          "解不等式组口诀（同大取大）：x>a 且 x>b ➔ x > [[a]]。",
-          "解不等式组口诀（同小取小）：x<a 且 x<b ➔ x < [[b]]。",
-          "解不等式组口诀（大小小大）：x<a 且 x>b ➔ [[b < x < a]]（即中间找）。",
-          "解不等式组口诀（大大小小）：x>a 且 x<b ➔ [[无解]]（解不了）。"
-        ]
-      },
-      {
-        id: 3, title: "第八章：整式乘除与因式分解", shortTitle: "整式因分", icon: "✖️",
-        sections: [
-          { subtitle: "幂的运算性质", content: "底数相同时，乘法变指数相加，除法变指数相减。", formula: "1. 同底数幂相乘：aᵐ · aⁿ = aᵐ⁺ⁿ\n2. 幂的乘方：(aᵐ)ⁿ = aᵐⁿ\n3. 积的乘方：(ab)ⁿ = aⁿbⁿ\n4. 同底数幂相除：aᵐ ÷ aⁿ = aᵐ⁻ⁿ (a≠0)" },
-          { subtitle: "零指数幂与负整数指数幂", formula: "a⁰ = 1 (a≠0)\na⁻ᵖ = 1 / aᵖ (a≠0, p为正整数)", important: "底数 a 绝对不能为 0。" },
-          { subtitle: "乘法公式（核心考点）", content: "用于快速展开多项式乘积。", formula: "平方差公式：(a+b)(a-b) = a² - b²\n完全平方公式：(a±b)² = a² ± 2ab + b²", important: "完全平方公式中间的 ±2ab 项极易漏掉！" },
-          { subtitle: "因式分解", content: "把一个多项式化成几个整式的积的形式，与整式乘法是互逆过程。\n\n常用方法：\n1. 提公因式法：提取各项都有的公因式。\n2. 公式法：逆用平方差和完全平方公式。\n3. 十字相乘法：常用于二次三项式 x²+(p+q)x+pq = (x+p)(x+q)。", important: "因式分解必须进行到每一个因式都不能再分解为止。" }
-        ],
-        quizzes: [
-          "同底数幂相乘：底数不变，指数[[相加]]。即 aᵐ · aⁿ = [[aᵐ⁺ⁿ]]。",
-          "幂的乘方：底数不变，指数[[相乘]]。即 (aᵐ)ⁿ = [[aᵐⁿ]]。",
-          "任何不等于0的数的0次幂都等于[[1]]。即 a⁰ = 1 (a≠0)。",
-          "平方差公式：(a+b)(a-b) = [[a² - b²]]。",
-          "完全平方公式：(a±b)² = [[a² ± 2ab + b²]]，极易漏掉中间的[[±2ab]]项。",
-          "因式分解必须进行到每一个因式都[[不能再分解]]为止。"
-        ]
-      },
-      {
-        id: 4, title: "第九章：分式", shortTitle: "分式", icon: "➗",
-        sections: [
-          { subtitle: "分式的概念与意义", content: "形如 A/B 的式子，其中A、B都是整式，且B中含有字母，叫做分式。", important: "分式有意义的条件：分母 B ≠ 0\n分式值为0的条件：分子 A = 0 且 分母 B ≠ 0（必须同时满足！）" },
-          { subtitle: "分式的基本性质", content: "分式的分子和分母同乘（或除以）一个不等于0的整式，分式的值不变。这是约分和通分的基础。", formula: "A/B = (A·C)/(B·C) = (A÷C)/(B÷C) (其中 C≠0)" },
-          { subtitle: "分式的运算", content: "乘法：分子乘分子作积的分子，分母乘分母作积的分母。\n除法：除以一个分式，等于乘以这个分式的倒数。\n加减：同分母直接把分子相加减；异分母先找最简公分母通分，再加减。" },
-          { subtitle: "分式方程", content: "分母中含有未知数的方程叫做分式方程。\n解题思路是“化归思想”：方程两边同乘最简公分母，把分式方程转化为整式方程求解。", important: "解分式方程必须检验！如果求得的解使最简公分母为0，则该解是原方程的增根，必须舍去。" }
-        ],
-        quizzes: [
-          "分式 A/B 有意义的条件是：分母 B [[≠ 0]]。",
-          "分式值为0的条件是：分子 A [[= 0]] 且 分母 B [[≠ 0]]（必须同时满足）。",
-          "除以一个分式，等于乘以这个分式的[[倒数]]。",
-          "解分式方程最后一步必须要[[检验]]！",
-          "如果求得的解使最简公分母为0，则该解是原方程的[[增根]]，必须舍去。"
-        ]
-      }
-    ];
+  return (
+    <div className="min-h-screen bg-slate-200 font-sans text-slate-800 selection:bg-indigo-100 flex justify-center">
+      <GlobalStyle />
+      
+      {/* 移动端约束容器：在宽屏上居中并限制最大宽度，真实手机上占满全屏 */}
+      <div className="w-full max-w-[430px] bg-slate-50 min-h-screen shadow-2xl relative">
+        
+        {/* 顶部吸顶导航区 */}
+        <div className="sticky top-0 z-20 w-full shadow-sm bg-white">
+          <header className="bg-indigo-600 text-white pt-4 pb-3 px-3 shadow-md">
+            <h1 className="text-[17px] font-bold text-center tracking-wide">
+              沪科版数学 · 7下复习
+            </h1>
+          </header>
 
-    const ClozeQuestion = ({ text }) => {
-      const parts = text.split(/\[\[(.*?)\]\]/g);
-      return (
-        <>
-          {parts.map((part, i) => i % 2 === 1 ? <Blank key={i} answer={part} /> : <span key={i}>{part}</span>)}
-        </>
-      );
-    };
+          <nav className="flex bg-white">
+            {units.map(unit => (
+              <button
+                key={unit.id}
+                onClick={() => setActiveUnitId(unit.id)}
+                className={`flex-1 py-2 px-0.5 flex flex-col items-center justify-center transition-all duration-200 border-b-[3px] ${
+                  activeUnitId === unit.id 
+                    ? 'border-indigo-600 text-indigo-700 bg-indigo-50/40 font-bold' 
+                    : 'border-transparent text-slate-500 hover:bg-slate-50'
+                }`}
+              >
+                <span className="text-[20px] mb-1">{unit.icon}</span>
+                <span className="text-[11px] leading-none whitespace-nowrap">{unit.shortTitle}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
 
-    const Blank = ({ answer }) => {
-      const [revealed, setRevealed] = useState(false);
-      return (
-        <span
-          onClick={() => setRevealed(!revealed)}
-          className={`inline-flex items-center justify-center min-w-[4rem] mx-1.5 px-2.5 py-1 rounded align-middle cursor-pointer transition-all duration-300 select-none ${
-            revealed ? 'bg-indigo-100 text-indigo-800 font-bold border-b-2 border-indigo-500 shadow-sm text-[15px]' : 'bg-slate-100 text-slate-400 text-[12px] border-b-2 border-slate-300 hover:bg-slate-200'
-          }`}
-        >
-          {revealed ? answer : '点击显示'}
-        </span>
-      );
-    };
-
-    function App() {
-      const [activeUnitId, setActiveUnitId] = useState(1);
-      const [mode, setMode] = useState('review');
-      const [resetKey, setResetKey] = useState(0);
-      const activeUnit = units.find(u => u.id === activeUnitId);
-
-      return (
-        <div className="min-h-screen bg-slate-200 font-sans text-slate-800 flex justify-center">
-          <div className="w-full max-w-[430px] bg-slate-50 min-h-screen shadow-2xl relative">
-            <div className="sticky top-0 z-20 w-full shadow-sm bg-white">
-              <header className="bg-indigo-600 text-white pt-4 pb-3 px-3 shadow-md">
-                <h1 className="text-[17px] font-bold text-center tracking-wide">沪科版数学 · 7下复习</h1>
-              </header>
-              <nav className="flex bg-white">
-                {units.map(unit => (
-                  <button
-                    key={unit.id}
-                    onClick={() => setActiveUnitId(unit.id)}
-                    className={`flex-1 py-2 px-0.5 flex flex-col items-center justify-center transition-all duration-200 border-b-[3px] ${
-                      activeUnitId === unit.id ? 'border-indigo-600 text-indigo-700 bg-indigo-50/40 font-bold' : 'border-transparent text-slate-500 hover:bg-slate-50'
-                    }`}
-                  >
-                    <span className="text-[20px] mb-1">{unit.icon}</span>
-                    <span className="text-[11px] leading-none whitespace-nowrap">{unit.shortTitle}</span>
-                  </button>
-                ))}
-              </nav>
-            </div>
-
-            <div className="flex justify-center mt-4 mb-2 animate-fade-slide px-4">
-              <div className="bg-slate-200/70 p-1 rounded-full flex w-full shadow-inner">
-                <button onClick={() => setMode('review')} className={`flex-1 py-2 rounded-full text-[14px] font-bold transition-all duration-300 ${mode === 'review' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>📖 知识背诵</button>
-                <button onClick={() => setMode('practice')} className={`flex-1 py-2 rounded-full text-[14px] font-bold transition-all duration-300 ${mode === 'practice' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500'}`}>✍️ 填空检验</button>
-              </div>
-            </div>
-
-            <main className="p-3.5 pb-16 w-full">
-              <div key={`header-${activeUnitId}`} className="mb-4 px-1 flex justify-between items-end animate-fade-slide">
-                <div>
-                  <h2 className="text-[19px] font-extrabold text-slate-800 mb-1">{activeUnit.title}</h2>
-                  <p className="text-[12px] text-slate-500">{mode === 'review' ? '核心概念与重要公式提纲' : '点击空白处自动显示正确答案'}</p>
-                </div>
-                {mode === 'practice' && (
-                  <button onClick={() => setResetKey(k => k + 1)} className="text-[12px] text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full font-medium active:bg-indigo-100 transition-colors shrink-0 ml-2">↻ 重置</button>
-                )}
-              </div>
-
-              <div key={`content-${activeUnitId}-${mode}-${resetKey}`} className="space-y-4">
-                {mode === 'review' ? (
-                  activeUnit.sections.map((sec, idx) => (
-                    <section key={idx} className="bg-white rounded-xl shadow-sm border border-slate-200/70 overflow-hidden animate-fade-slide" style={{ animationDelay: `${idx * 80}ms` }}>
-                      <div className="bg-gradient-to-r from-indigo-50/80 to-white border-b border-slate-100 px-3.5 py-3 flex items-center">
-                        <div className="w-1 h-3.5 bg-indigo-500 rounded-full mr-2"></div>
-                        <h3 className="text-[15px] font-bold text-indigo-900">{sec.subtitle}</h3>
-                      </div>
-                      <div className="p-3.5">
-                        {sec.content && <p className="text-[14.5px] leading-relaxed text-slate-700 whitespace-pre-line mb-3">{sec.content}</p>}
-                        {sec.formula && (
-                          <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-3 mb-3 overflow-x-auto">
-                            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block sticky left-0">公式 / 规律</span>
-                            <div className="text-indigo-800 font-mono text-[14px] leading-relaxed whitespace-pre-wrap min-w-max pr-2">{sec.formula}</div>
-                          </div>
-                        )}
-                        {sec.important && (
-                          <div className="bg-amber-50/80 border border-amber-200/80 rounded-lg p-2.5 flex gap-2 items-start">
-                            <span className="text-amber-500 text-[14px] leading-none mt-0.5">⚠️</span>
-                            <div>
-                              <span className="text-[11.5px] font-bold text-amber-700 mb-0.5 block">注意 / 易错点</span>
-                              <p className="text-amber-900 text-[13.5px] leading-snug">{sec.important}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </section>
-                  ))
-                ) : (
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-200/70 p-4 animate-fade-slide">
-                    <div className="space-y-5">
-                      {activeUnit.quizzes.map((quiz, idx) => (
-                        <div key={idx} className="flex gap-2 items-start border-b border-slate-100 pb-4 last:border-0 last:pb-0">
-                          <span className="text-indigo-300 font-bold text-[15px] mt-0.5">{idx + 1}.</span>
-                          <div className="text-[14.5px] text-slate-700 leading-loose"><ClozeQuestion text={quiz} /></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </main>
+        {/* 模式切换 */}
+        <div className="flex justify-center mt-4 mb-2 animate-fade-slide px-4">
+          <div className="bg-slate-200/70 p-1 rounded-full flex w-full shadow-inner">
+            <button 
+              onClick={() => setMode('review')}
+              className={`flex-1 py-2 rounded-full text-[14px] font-bold transition-all duration-300 ${mode === 'review' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+            >
+              📖 知识背诵
+            </button>
+            <button 
+              onClick={() => setMode('practice')}
+              className={`flex-1 py-2 rounded-full text-[14px] font-bold transition-all duration-300 ${mode === 'practice' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500'}`}
+            >
+              ✍️ 填空检验
+            </button>
           </div>
         </div>
-      );
-    }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+        {/* 主要内容展示区 */}
+        <main className="p-3.5 pb-16 w-full">
+          <div key={`header-${activeUnitId}`} className="mb-4 px-1 flex justify-between items-end animate-fade-slide">
+            <div>
+              <h2 className="text-[19px] font-extrabold text-slate-800 mb-1">{activeUnit.title}</h2>
+              <p className="text-[12px] text-slate-500">
+                {mode === 'review' ? '核心概念与重要公式提纲' : '点击空白处自动显示正确答案'}
+              </p>
+            </div>
+            {mode === 'practice' && (
+              <button 
+                onClick={() => setResetKey(k => k + 1)}
+                className="text-[12px] text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full font-medium active:bg-indigo-100 transition-colors shrink-0 ml-2"
+              >
+                ↻ 重置
+              </button>
+            )}
+          </div>
+
+          <div key={`content-${activeUnitId}-${mode}-${resetKey}`} className="space-y-4">
+            {mode === 'review' ? (
+              activeUnit.sections.map((sec, idx) => (
+                <section 
+                  key={`${activeUnitId}-${idx}`} 
+                  className="bg-white rounded-xl shadow-sm border border-slate-200/70 overflow-hidden animate-fade-slide"
+                  style={{ animationDelay: `${idx * 80}ms` }}
+                >
+                  {/* 卡片标题 */}
+                  <div className="bg-gradient-to-r from-indigo-50/80 to-white border-b border-slate-100 px-3.5 py-3 flex items-center">
+                    <div className="w-1 h-3.5 bg-indigo-500 rounded-full mr-2"></div>
+                    <h3 className="text-[15px] font-bold text-indigo-900">{sec.subtitle}</h3>
+                  </div>
+                  
+                  {/* 卡片内容 */}
+                  <div className="p-3.5">
+                    {sec.content && (
+                      <p className="text-[14.5px] leading-relaxed text-slate-700 whitespace-pre-line mb-3">
+                        {sec.content}
+                      </p>
+                    )}
+                    
+                    {/* 公式高亮框 */}
+                    {sec.formula && (
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-3 mb-3 overflow-x-auto">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block sticky left-0">公式 / 规律</span>
+                        <div className="text-indigo-800 font-mono text-[14px] leading-relaxed whitespace-nowrap min-w-max pr-2">
+                          {sec.formula}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* 易错点提示框 */}
+                    {sec.important && (
+                      <div className="bg-amber-50/80 border border-amber-200/80 rounded-lg p-2.5 flex gap-2 items-start">
+                        <span className="text-amber-500 text-[14px] leading-none mt-0.5">⚠️</span>
+                        <div>
+                          <span className="text-[11.5px] font-bold text-amber-700 mb-0.5 block">注意 / 易错点</span>
+                          <p className="text-amber-900 text-[13.5px] leading-snug">
+                            {sec.important}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              ))
+            ) : (
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200/70 p-4 animate-fade-slide">
+                <div className="space-y-5">
+                  {activeUnit.quizzes.map((quiz, idx) => (
+                    <div key={idx} className="flex gap-2 items-start border-b border-slate-100 pb-4 last:border-0 last:pb-0">
+                      <span className="text-indigo-300 font-bold text-[15px] mt-0.5">{idx + 1}.</span>
+                      <div className="text-[14.5px] text-slate-700 leading-loose">
+                        <ClozeQuestion text={quiz} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="mt-8 pb-4 text-center text-slate-400 text-[11px] font-medium tracking-widest">
+            —— 到底啦 ——
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
